@@ -259,6 +259,7 @@ class FrontEndApp(object):
             create_buff_func = None
 
         self.recorder = RecorderApp(self.RECORD_SERVER % str(self.warcserver_server.port), warc_writer,
+                                    skip_filters=recorder_config.get('skip_filters'),
                                     accept_colls=recorder_config.get('source_filter'),
                                     create_buff_func=create_buff_func)
 

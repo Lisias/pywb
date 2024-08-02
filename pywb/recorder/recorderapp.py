@@ -1,6 +1,7 @@
 import json
 import tempfile
 import traceback
+import logging
 
 import gevent
 import gevent.queue
@@ -9,6 +10,8 @@ import six
 from six.moves.urllib.parse import parse_qsl
 from warcio.recordloader import ArcWarcRecordLoader
 
+import pywb.recorder.filter as advfilters
+import pywb.recorder.filters as defaultfilters
 from pywb.recorder.filters import CollectionFilter, SkipRangeRequestFilter
 from pywb.utils.format import ParamFormatter
 from pywb.utils.io import BUFF_SIZE, StreamIter, no_except_close
@@ -29,20 +32,28 @@ class RecorderApp(object):
         self.write_queue = gevent.queue.Queue()
         gevent.spawn(self._write_loop)
 
-        if not skip_filters:
-            skip_filters = self.create_default_filters(kwargs)
-
-        self.skip_filters = skip_filters
+        self.skip_filters = self.create_filters(skip_filters, kwargs)
 
     @staticmethod
-    def create_default_filters(kwargs):
-        skip_filters = [SkipRangeRequestFilter()]
+    def create_filters(skip_filters, kwargs):
+        filters = [SkipRangeRequestFilter()]
 
         accept_colls = kwargs.get('accept_colls')
         if accept_colls:
-            skip_filters.append(CollectionFilter(accept_colls))
+            filters.append(CollectionFilter(accept_colls))
 
-        return skip_filters
+        if skip_filters:
+            for f in skip_filters.split(';'):
+                f = "Skip"+f.strip()
+                if f in dir(advfilters):
+                    filters.append(advfilters[f]())
+                    continue
+                if f in dir(defaultfilters):
+                    filters.append(defaultfilters[f]())
+                    continue
+                logging.error("Filter {:s} doesn't exists!".format(f));
+
+        return filters
 
     @staticmethod
     def default_create_buffer(params, name):

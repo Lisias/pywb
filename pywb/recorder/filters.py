@@ -66,8 +66,8 @@ class SkipDefaultFilter(object):
 
         return False
 
-    def skip_response(self, path, req_headers, resp_headers, params):
-        if resp_headers.get('Recorder-Skip') == '1':
+    def skip_response(self, path, req, resp, params):
+        if resp.headers and resp.headers.get('Recorder-Skip') == '1':
             return True
 
         return False
@@ -85,9 +85,9 @@ class CollectionFilter(SkipDefaultFilter):
             for name in accept_colls:
                 self.rx_accept_map[name] = re.compile(accept_colls[name])
 
-    def skip_response(self, path, req_headers, resp_headers, params):
-        if super(CollectionFilter, self).skip_response(path, req_headers,
-                                                       resp_headers, params):
+    def skip_response(self, path, req, resp, params):
+        if super(CollectionFilter, self).skip_response(path, req,
+                                                       resp, params):
             return True
 
         path = path[1:].split('/', 1)[0]
@@ -96,7 +96,7 @@ class CollectionFilter(SkipDefaultFilter):
         if not rx:
             rx = self.rx_accept_map.get('*')
 
-        if rx and not rx.match(resp_headers.get('Warcserver-Source-Coll', '')):
+        if rx and not rx.match(resp.headers.get('Warcserver-Source-Coll', '')):
             return True
 
         return False

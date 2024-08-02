@@ -222,8 +222,8 @@ class RecorderApp(object):
 
         if not skipping:
             skipping = any(x.skip_response(path,
-                                           req_stream.headers,
-                                           res.headers,
+                                           req_stream,
+                                           res,
                                            params)
                            for x in self.skip_filters)
 

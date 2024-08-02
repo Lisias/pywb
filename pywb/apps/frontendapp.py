@@ -11,6 +11,7 @@ from wsgiprox.wsgiprox import WSGIProxMiddleware
 from pywb.recorder.multifilewarcwriter import MultiFileWARCWriter
 from pywb.recorder.recorderapp import RecorderApp
 from pywb.recorder.filters import SkipDupePolicy, WriteDupePolicy, WriteRevisitDupePolicy
+from pywb.recorder.filter import WriteRevisitWithConstraintPolicies
 from pywb.recorder.redisindexer import WritableRedisIndexer, RedisPendingCounterTempBuffer
 
 from pywb.utils.loaders import load_yaml_config
@@ -229,6 +230,8 @@ class FrontEndApp(object):
             dedup_policy = WriteDupePolicy()
         elif dedup_policy == 'revisit':
             dedup_policy = WriteRevisitDupePolicy()
+        elif dedup_policy and dedup_policy.startswith('revisit:'):
+            dedup_policy = WriteRevisitWithConstraintPolicies(dedup_policy)
         elif dedup_policy == 'skip':
             dedup_policy = SkipDupePolicy()
             dedup_by_url = True

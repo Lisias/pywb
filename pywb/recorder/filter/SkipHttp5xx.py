@@ -6,7 +6,7 @@ Created on Aug 1, 2024
 
 from requests import Request, Response
 
-class SkipDefaultFilter(object):
+class SkipFilter(object):
     def skip_request(self, path:str, req:Request):
         return False
 

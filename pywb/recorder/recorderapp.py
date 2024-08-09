@@ -46,7 +46,7 @@ class RecorderApp(object):
             for f in skip_filters.split(';'):
                 f = "Skip"+f.strip()
                 if f in dir(advfilters):
-                    filters.append(advfilters[f]())
+                    filters.append(getattr(advfilters, f)())
                     continue
                 if f in dir(defaultfilters):
                     filters.append(defaultfilters[f]())

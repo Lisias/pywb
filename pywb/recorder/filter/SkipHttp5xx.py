@@ -3,7 +3,7 @@ Created on Aug 1, 2024
 
 @author: lisias
 '''
-
+import logging
 from requests import Request, Response
 
 class SkipFilter(object):
@@ -12,4 +12,6 @@ class SkipFilter(object):
 
     def skip_response(self, path:str, req:Request, resp:Response, params):
         r = 5 == (resp.status_code//100)
+        if r:
+            logging.debug("Skiping response for {:s}".format(resp.url))
         return r

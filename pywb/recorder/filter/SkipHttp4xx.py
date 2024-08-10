@@ -11,4 +11,5 @@ class SkipFilter(object):
         return False
 
     def skip_response(self, path:str, req:Request, resp:Response, params):
-        return  4 == (resp.status_code/100)
+        r = 4 == (resp.status_code//100)
+        return r

@@ -48,7 +48,7 @@ class Filter(object):
                     months_num = float(match.group(1))
                     continue
 
-                match = re.search('([\.0-9]+?) ?we?e?k?s?', param)
+                match = re.search('([\.0-9]+?) ?we?e?e?s?', param)
                 if match:
                     weeks_num = float(match.group(1))
                     continue

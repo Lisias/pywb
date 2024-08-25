@@ -456,7 +456,6 @@ class RedisIndexSource(BaseIndexSource):
             key_prefix = parts[4]
             redis_url = 'redis://' + parts[2] + '/' + parts[3]
 
-        redis_key_template = key_prefix
         if not redis_:
             redis_ = redis.StrictRedis.from_url(redis_url, decode_responses=True)
         return redis_, key_prefix

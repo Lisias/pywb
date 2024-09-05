@@ -279,7 +279,12 @@ class LiveWebLoader(BaseLoader):
 
         socks_host = os.environ.get('SOCKS_HOST')
         socks_port = os.environ.get('SOCKS_PORT', 9050)
-        if socks_host and socks_port:
+        socks_login = os.environ.get('SOCKS_LOGIN')
+        socks_passwd = os.environ.get('SOCKS_PASSWD')
+
+        if socks_login and socks_passwd and socks_host and socks_port:
+            self.socks_proxy = 'socks5h://{0}:{1}@{2}:{3}'.format(socks_login, socks_passwd, socks_host, socks_port)
+        elif socks_host and socks_port:
             self.socks_proxy = 'socks5h://{0}:{1}'.format(socks_host, socks_port)
         else:
             self.socks_proxy = None

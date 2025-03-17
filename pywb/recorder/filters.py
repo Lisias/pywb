@@ -37,7 +37,7 @@ class ExcludeHttpOnlyCookieHeaders(object):
 # ============================================================================
 class WriteRevisitDupePolicy(object):
     def __call__(self, cdx, params):
-        dt = timestamp_to_datetime(cdx['timestamp'])
+        dt = timestamp_to_datetime(cdx['timestamp'], True)
         return ('revisit', cdx['url'], datetime_to_iso_date(dt))
 
 

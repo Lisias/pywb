@@ -19,7 +19,7 @@ class Filter(object):
             logging.error("WriteRevisitWithConstraintPolicy {:s} doesn't exists!".format(policy));
 
     def __call__(self, cdx, params):
-        dt = timestamp_to_datetime(cdx['timestamp'])
+        dt = timestamp_to_datetime(cdx['timestamp'], True)
         delta = datetime.now(timezone.utc) - dt
         if self.ignore_delta_seconds and delta.total_seconds() < self.ignore_delta_seconds:
             return 'skip'
